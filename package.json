@@ -1,0 +1,27 @@
+{
+  "name": "ticketing-server",
+  "version": "1.0.0",
+  "description": "뮤지컬 및 콘서트 예매 시스템을 구현하는 백엔드 프로젝트입니다.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PlemRuckol/ticketing-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PlemRuckol/ticketing-server/issues"
+  },
+  "homepage": "https://github.com/PlemRuckol/ticketing-server#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
