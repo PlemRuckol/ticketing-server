@@ -42,4 +42,22 @@ router.post("/", (req, res) => {
     res.status(201).json(reservation);
 });
 
+router.delete("/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const reservationIndex =  reservations.findIndex(
+        (reservation) => reservation.id === id
+    );
+
+    if(reservationIndex === -1){
+        return res.status(404).json({
+            message: "Reservation not found",
+        });
+    }
+    reservations.splice(reservationIndex, 1);
+
+    res.json({
+        message: "Reservation cancelled",
+    });
+});
+
 module.exports = router;
