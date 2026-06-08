@@ -1,11 +1,10 @@
 const express = require("express");
+const reservationService = require("../services/reservationService");
 
 const router = express.Router();
 
-let reservations = [];
-let nextReservationId = 1;
-
 router.get("/", (req, res) => {
+    const reservations = reservationService.gettAllReservations();
     res.json(reservations);
 });
 
@@ -30,30 +29,32 @@ router.post("/", (req, res) => {
             message: "concertId, userName, seatNumber are required",
         });
     }
-    const reservation = {
-        id: nextReservationId++,
-        concertId,
-        userName,
-        seatNumber,
-        status: "CONFIRMED",
-        createdAt: new Date().toISOString(),
-    };
-    reservations.push(reservation);
+
+    if(reservationService.isSeatReserved(concertId, seatNumber)){
+        return res.status(409).json({
+            message: "Seat already reserved",
+        });
+    }
+
+    const reservation =
+        reservationService.createReservation(
+            concertId,
+            userName,
+            seatNumber
+        );
     res.status(201).json(reservation);
 });
 
 router.delete("/:id", (req, res) => {
     const id = Number(req.params.id);
-    const reservationIndex =  reservations.findIndex(
-        (reservation) => reservation.id === id
-    );
 
-    if(reservationIndex === -1){
+    const deletedReservation = reservationService.deleteReservation(id);
+
+    if(!deletedReservation){
         return res.status(404).json({
             message: "Reservation not found",
         });
     }
-    reservations.splice(reservationIndex, 1);
 
     res.json({
         message: "Reservation cancelled",
