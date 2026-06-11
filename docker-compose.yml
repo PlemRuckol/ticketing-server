@@ -1,0 +1,15 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-ticketing
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: ticketing
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

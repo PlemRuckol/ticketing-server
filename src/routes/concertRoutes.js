@@ -1,37 +1,40 @@
 const express = require("express");
+const pool = require("../config/db");
 
 const router = express.Router();
 
-const concerts = [
-    {
-        id: 1,
-        title: "뮤지컬 레미제라블",
-        date: "2026-07-01",
-        venue: "블루스퀘어",
-    },
-    {
-        id: 2,
-        title: "Jazz Night",
-        date: "2026-07-15",
-        venue: "세종문화회관",
-    },
-];
-
-router.get("/", (req, res) => {
-    res.json(concerts);
+router.get("/", async (req, res) => {
+    try{
+        const [rows] = await pool.query(
+            "SELECT id, title, venue, concert_date, created_at FROM concerts"
+        );
+        res.json(rows);
+    } catch(error){
+        res.status(500).json({ message: "Database error "});
+    }
 });
 
-router.get("/:id", (req, res) => {
-    const id = Number(req.params.id);
-    const concert = concerts.find((concert) => concert.id === id);
+router.get("/:id", async (req, res) => {
+    try{
+        const id = Number(req.params.id);
 
-    if(!concert){
-        return res.status(404).json({
-            message: "Concert not found",
-        });
+        const [rows] = await pool.query(
+            "SELECT id, title, venue, concert_date, created_at FROM concerts WHERE id = ?",
+            [id]
+        );
+
+        if(rows.length === 0){
+            return res.status(404).json({
+                message: "Concert not found",
+            });
+        }
+
+        res.json(rows[0]);
+
+    } catch(error){
+        console.error(error);
+        res.status(500).json({message: "Database error"});
     }
-
-    res.json(concert);
 });
 
 module.exports = router;
